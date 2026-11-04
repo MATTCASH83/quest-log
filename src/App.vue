@@ -62,7 +62,7 @@ const handleQuestSelected = (quest) => {
 const handleQuestCompleted = () => {
   selectedQuest.value.completed = true
 
-  if (filterValue.value === 'active') {
+  if (!filteredQuests.value.find((x) => x.id === selectedQuest.value.id)) {
     selectedQuest.value = null
   }
 }
