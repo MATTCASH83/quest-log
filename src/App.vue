@@ -27,7 +27,7 @@ const quests = ref([
   },
 ])
 
-const filterValue = ref('')
+const filterValue = ref('all')
 
 const filteredQuests = computed(() => {
   if (filterValue.value === 'active') {
@@ -61,6 +61,10 @@ const handleQuestSelected = (quest) => {
 
 const handleQuestCompleted = () => {
   selectedQuest.value.completed = true
+
+  if (filterValue.value === 'active') {
+    selectedQuest.value = null
+  }
 }
 
 const handleFilterSelected = (value) => {
@@ -77,7 +81,7 @@ const handleFilterSelected = (value) => {
   <p>You have {{ numberOfQuests }} quests</p>
   <p>{{ numberOfCompletedQuests }} completed</p>
   <p>{{ remainingXp }} total XP available</p>
-  <button @click="handleFilterSelected('')" :disabled="!filterValue">All</button>
+  <button @click="handleFilterSelected('all')" :disabled="filterValue === 'all'">All</button>
   <button @click="handleFilterSelected('active')" :disabled="filterValue === 'active'">
     Active
   </button>
