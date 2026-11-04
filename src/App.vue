@@ -68,10 +68,6 @@ const handleQuestSelected = (quest) => {
 
 const handleQuestCompleted = () => {
   selectedQuest.value.completed = true
-
-  if (!filteredQuests.value.find((x) => x.id === selectedQuest.value.id)) {
-    selectedQuest.value = null
-  }
 }
 
 const handleFilterSelected = (value) => {
@@ -79,11 +75,10 @@ const handleFilterSelected = (value) => {
     return
   }
   filterValue.value = value
-  selectedQuest.value = null
 }
 
-watch(filteredQuests, (newList) => {
-  if (selectedQuest.value && !newList.find((x) => x.id === selectedQuest.value.id)) {
+watch(filteredQuests, () => {
+  if (selectedQuest.value && !filteredQuests.value.find((x) => x.id === selectedQuest.value.id)) {
     selectedQuest.value = null
   }
 })
