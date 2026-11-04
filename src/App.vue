@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import QuestList from './components/QuestList.vue'
 import QuestDetail from './components/QuestDetail.vue'
 
@@ -81,6 +81,12 @@ const handleFilterSelected = (value) => {
   filterValue.value = value
   selectedQuest.value = null
 }
+
+watch(filteredQuests, (newList) => {
+  if (selectedQuest.value && !newList.find((x) => x.id === selectedQuest.value.id)) {
+    selectedQuest.value = null
+  }
+})
 </script>
 
 <template>
