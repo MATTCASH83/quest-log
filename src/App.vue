@@ -28,17 +28,24 @@ const quests = ref([
 ])
 
 const filterValue = ref('all')
+const searchText = ref('')
 
 const filteredQuests = computed(() => {
+  let list = quests.value
+
+  if (searchText.value) {
+    list = list.filter((x) => x.title.toLowerCase().includes(searchText.value.toLowerCase()))
+  }
+
   if (filterValue.value === 'active') {
-    return quests.value.filter((x) => x.completed === false)
+    return list.filter((x) => x.completed === false)
   }
 
   if (filterValue.value === 'completed') {
-    return quests.value.filter((x) => x.completed === true)
+    return list.filter((x) => x.completed === true)
   }
 
-  return quests.value
+  return list
 })
 
 const numberOfQuests = computed(() => {
@@ -81,6 +88,10 @@ const handleFilterSelected = (value) => {
   <p>You have {{ numberOfQuests }} quests</p>
   <p>{{ numberOfCompletedQuests }} completed</p>
   <p>{{ remainingXp }} total XP available</p>
+  <div>
+    <label>Search: </label>
+    <input type="text" v-model="searchText" />
+  </div>
   <button @click="handleFilterSelected('all')" :disabled="filterValue === 'all'">All</button>
   <button @click="handleFilterSelected('active')" :disabled="filterValue === 'active'">
     Active
