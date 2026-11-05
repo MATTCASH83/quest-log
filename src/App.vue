@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue'
 import QuestList from './components/QuestList.vue'
 import QuestDetail from './components/QuestDetail.vue'
 import QuestForm from './components/QuestForm.vue'
+import './assets/global.css'
 
 const quests = ref([
   {
@@ -30,6 +31,7 @@ const quests = ref([
 
 const filterValue = ref('all')
 const searchText = ref('')
+const isEditingQuest = ref(false)
 
 const filteredQuests = computed(() => {
   let list = quests.value
@@ -71,6 +73,10 @@ const handleQuestCompleted = () => {
   selectedQuest.value.completed = true
 }
 
+const handleEditCanceled = () => {
+  isEditingQuest.value = false
+}
+
 const handleFilterSelected = (value) => {
   if (filterValue.value === value) {
     return
@@ -83,6 +89,18 @@ watch(filteredQuests, () => {
     selectedQuest.value = null
   }
 })
+
+const handleQuestEditPressed = () => {
+  isEditingQuest.value = true
+}
+
+const handleQuestUpdated = (quest) => {
+  selectedQuest.value.title = quest.title
+  selectedQuest.value.difficulty = quest.difficulty
+  selectedQuest.value.xp = quest.xp
+
+  isEditingQuest.value = false
+}
 
 const handleQuestCreated = (quest) => {
   let newId =
@@ -109,21 +127,31 @@ const handleQuestCreated = (quest) => {
       <label>Search: </label>
       <input type="text" v-model="searchText" />
     </div>
-    <button @click="handleFilterSelected('all')" :disabled="filterValue === 'all'">All</button>
-    <button @click="handleFilterSelected('active')" :disabled="filterValue === 'active'">
-      Active
-    </button>
-    <button @click="handleFilterSelected('completed')" :disabled="filterValue === 'completed'">
-      Completed
-    </button>
+    <div class="flex-row">
+      <button @click="handleFilterSelected('all')" :disabled="filterValue === 'all'">All</button>
+      <button @click="handleFilterSelected('active')" :disabled="filterValue === 'active'">
+        Active
+      </button>
+      <button @click="handleFilterSelected('completed')" :disabled="filterValue === 'completed'">
+        Completed
+      </button>
+    </div>
   </div>
   <QuestList :quests="filteredQuests" @quest-selected="handleQuestSelected" />
   <QuestDetail
     v-if="selectedQuest !== null"
     :quest="selectedQuest"
     @quest-completed="handleQuestCompleted"
+    @edit-pressed="handleQuestEditPressed"
   />
-  <QuestForm @quest-created="handleQuestCreated" />
+  <QuestForm
+    name="editQuest"
+    v-if="isEditingQuest"
+    @quest-updated="handleQuestUpdated"
+    @edit-canceled="handleEditCanceled"
+    :existingQuest="selectedQuest"
+  />
+  <QuestForm name="createQuest" @quest-created="handleQuestCreated" />
 </template>
 
 <style scoped></style>
