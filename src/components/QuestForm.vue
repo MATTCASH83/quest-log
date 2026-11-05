@@ -26,6 +26,10 @@ const buttonText = computed(() => {
   return isEditingExistingQuest.value ? 'Save' : 'Create Quest'
 })
 
+const formId = computed(() => {
+  return isEditingExistingQuest.value ? 'edit-request' : 'create-request'
+})
+
 const questDraft = ref(
   isEditingExistingQuest.value ? { ...props.existingQuest } : createDefaultQuest(),
 )
@@ -85,26 +89,26 @@ const handleCancelButton = () => {
 </script>
 
 <template>
-  <form class="quest-form" @submit.prevent>
+  <form :id="formId" class="quest-form" @submit.prevent="handleSubmitButton">
     <h3>{{ headerText }}</h3>
     <div class="quest-form-row">
-      <label for="title">Title: </label>
-      <input id="title" v-model="questDraft.title" />
+      <label :for="`${formId}-title`">Title: </label>
+      <input :id="`${formId}-title`" v-model="questDraft.title" />
     </div>
     <div class="quest-form-row">
-      <label for="difficulty">Difficulty: </label>
-      <select id="difficulty" v-model="questDraft.difficulty">
+      <label :for="`${formId}-difficulty`">Difficulty: </label>
+      <select :id="`${formId}-difficulty`" v-model="questDraft.difficulty">
         <option v-for="difficulty in difficulties" :key="difficulty" :value="difficulty">
           {{ difficulty }}
         </option>
       </select>
     </div>
     <div class="quest-form-row">
-      <label for="xp">XP: </label>
-      <input id="xp" v-model.number="questDraft.xp" type="number" min="0" />
+      <label :for="`${formId}-xp`">XP: </label>
+      <input :id="`${formId}-xp`" v-model.number="questDraft.xp" type="number" min="0" />
     </div>
     <div :class="['flex-row', 'centered']">
-      <button :disabled="errors.length" type="submit" @click="handleSubmitButton">
+      <button :disabled="errors.length" type="submit">
         {{ buttonText }}
       </button>
       <button type="button" v-if="isEditingExistingQuest" @click="handleCancelButton">

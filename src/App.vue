@@ -67,6 +67,7 @@ const selectedQuest = ref(null)
 
 const handleQuestSelected = (quest) => {
   selectedQuest.value = quest
+  isEditingQuest.value = false
 }
 
 const handleQuestCompleted = () => {
