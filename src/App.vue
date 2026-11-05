@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import QuestList from './components/QuestList.vue'
 import QuestDetail from './components/QuestDetail.vue'
+import QuestForm from './components/QuestForm.vue'
 
 const quests = ref([
   {
@@ -82,6 +83,16 @@ watch(filteredQuests, () => {
     selectedQuest.value = null
   }
 })
+
+const handleQuestCreated = (quest) => {
+  let newId =
+    quests.value.reduce((max, current) => {
+      return current.id > max.id ? current : max
+    }, quests.value[0]) + 1
+
+  quest.id = newId
+  quests.value.push(quest)
+}
 </script>
 
 <template>
@@ -89,23 +100,26 @@ watch(filteredQuests, () => {
   <p>You have {{ numberOfQuests }} quests</p>
   <p>{{ numberOfCompletedQuests }} completed</p>
   <p>{{ remainingXp }} total XP available</p>
-  <div>
-    <label>Search: </label>
-    <input type="text" v-model="searchText" />
+  <div class="quest-form">
+    <div>
+      <label>Search: </label>
+      <input type="text" v-model="searchText" />
+    </div>
+    <button @click="handleFilterSelected('all')" :disabled="filterValue === 'all'">All</button>
+    <button @click="handleFilterSelected('active')" :disabled="filterValue === 'active'">
+      Active
+    </button>
+    <button @click="handleFilterSelected('completed')" :disabled="filterValue === 'completed'">
+      Completed
+    </button>
   </div>
-  <button @click="handleFilterSelected('all')" :disabled="filterValue === 'all'">All</button>
-  <button @click="handleFilterSelected('active')" :disabled="filterValue === 'active'">
-    Active
-  </button>
-  <button @click="handleFilterSelected('completed')" :disabled="filterValue === 'completed'">
-    Completed
-  </button>
   <QuestList :quests="filteredQuests" @quest-selected="handleQuestSelected" />
   <QuestDetail
     v-if="selectedQuest !== null"
     :quest="selectedQuest"
     @quest-completed="handleQuestCompleted"
   />
+  <QuestForm @quest-created="handleQuestCreated" />
 </template>
 
 <style scoped></style>

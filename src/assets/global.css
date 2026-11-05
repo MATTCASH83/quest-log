@@ -1,0 +1,16 @@
+.quest-form {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  width: 275px;
+  row-gap: 10px;
+}
+.quest-form-row {
+  display: grid;
+  grid-template-columns: 29% 70%;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  text-align: right;
+  width: 275px;
+}
