@@ -1,8 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-const isNumericOnly = (text) => /^\d+$/.test(text)
-
 const createDefaultQuest = () => ({
   id: 0,
   title: '',
@@ -13,7 +11,7 @@ const createDefaultQuest = () => ({
 
 const questDraft = ref(createDefaultQuest())
 
-const difficulties = ref(['easy', 'medium', 'hard'])
+const difficulties = ['easy', 'medium', 'hard']
 
 const errors = computed(() => {
   let list = []
@@ -22,14 +20,11 @@ const errors = computed(() => {
     list.push('Title cannot be blank or all whitespaces')
   }
 
-  if (!questDraft.value.xp || !isNumericOnly(questDraft.value.xp) || questDraft.value.xp <= 0) {
+  if (!questDraft.value.xp || questDraft.value.xp <= 0) {
     list.push('XP must be a number greater than 0')
   }
 
-  if (
-    !questDraft.value.difficulty.trim() ||
-    !difficulties.value.includes(questDraft.value.difficulty)
-  ) {
+  if (!difficulties.includes(questDraft.value.difficulty)) {
     list.push('You must select a valid difficulty')
   }
 

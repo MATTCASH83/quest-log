@@ -86,11 +86,15 @@ watch(filteredQuests, () => {
 
 const handleQuestCreated = (quest) => {
   let newId =
-    quests.value.reduce((max, current) => {
-      return current.id > max.id ? current : max
-    }, quests.value[0]) + 1
+    quests.value.reduce(
+      (max, current) => {
+        return current.id > max.id ? current : max
+      },
+      { id: 0 },
+    ).id + 1
 
   quest.id = newId
+
   quests.value.push(quest)
 }
 </script>
