@@ -2,8 +2,8 @@
 
 <template>
   <Teleport to="body">
-    <div class="modal-overlay" @click.self="$emit('close')" @vue:mounted="$emit('opened')">
-      <dialog open class="modal-content">
+    <div class="modal-overlay">
+      <dialog open :class="['modal-content', 'dialog-box']">
         <header class="modal-header">
           <slot name="header">Default Title</slot>
         </header>
@@ -36,5 +36,6 @@
   font-size: 1.25rem;
   font-weight: bold;
   margin-bottom: 20px;
+  color: rgb(243, 125, 70);
 }
 </style>

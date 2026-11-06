@@ -2,7 +2,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
+  min-height: 95vh;
   text-align: center;
   padding: 5px;
   font-family:
@@ -10,11 +10,20 @@ body {
     'Apple Color Emoji', 'Segoe UI Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #1a1a1a; /* Dark charcoal looks cleaner and softer than pure black */
+  /* color: #1a1a1a; Dark charcoal looks cleaner and softer than pure black */
+  color: rgb(223, 214, 214);
+  background-color: #1a1a1a;
+}
+h1,
+h2,
+h3,
+h4 {
+  color: rgb(243, 125, 70);
 }
 button {
   min-width: 75px;
   height: 28px;
+  cursor: pointer;
 }
 .flex-row {
   display: flex;
@@ -27,4 +36,12 @@ button {
 }
 .centered {
   justify-content: center;
+}
+.dialog-box {
+  background-color: #1a1a1a;
+  color: rgb(223, 214, 214);
+}
+dialog.dialog-box {
+  border: 2px solid rgb(250, 146, 97);
+  border-radius: 5px;
 }

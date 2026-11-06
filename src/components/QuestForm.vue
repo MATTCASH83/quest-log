@@ -139,7 +139,7 @@ const handleCancelButton = () => {
   text-align: right;
 }
 .error {
-  color: rgb(219, 15, 15);
+  color: rgb(253, 71, 71);
   font-size: 14px;
   width: 100%;
   text-align: center;
