@@ -31,7 +31,7 @@ const quests = ref([
 
 const filterValue = ref('all')
 const searchText = ref('')
-const isEditingQuest = ref(false)
+const appState = ref('view')
 
 const filteredQuests = computed(() => {
   let list = quests.value
@@ -67,15 +67,15 @@ const selectedQuest = ref(null)
 
 const handleQuestSelected = (quest) => {
   selectedQuest.value = quest
-  isEditingQuest.value = false
+  appState.value = 'view'
 }
 
 const handleQuestCompleted = () => {
   selectedQuest.value.completed = true
 }
 
-const handleEditCanceled = () => {
-  isEditingQuest.value = false
+const handleModalCanceled = () => {
+  appState.value = 'view'
 }
 
 const handleFilterSelected = (value) => {
@@ -92,7 +92,11 @@ watch(filteredQuests, () => {
 })
 
 const handleQuestEditPressed = () => {
-  isEditingQuest.value = true
+  appState.value = 'edit'
+}
+
+const handleCreatePressed = () => {
+  appState.value = 'create'
 }
 
 const handleQuestUpdated = (quest) => {
@@ -100,7 +104,7 @@ const handleQuestUpdated = (quest) => {
   selectedQuest.value.difficulty = quest.difficulty
   selectedQuest.value.xp = quest.xp
 
-  isEditingQuest.value = false
+  appState.value = 'view'
 }
 
 const handleQuestCreated = (quest) => {
@@ -115,6 +119,8 @@ const handleQuestCreated = (quest) => {
   quest.id = newId
 
   quests.value.push(quest)
+
+  appState.value = 'view'
 }
 </script>
 
@@ -123,36 +129,61 @@ const handleQuestCreated = (quest) => {
   <p>You have {{ numberOfQuests }} quests</p>
   <p>{{ numberOfCompletedQuests }} completed</p>
   <p>{{ remainingXp }} total XP available</p>
-  <div class="quest-form">
+
+  <div class="flex-row">
+    <button class="button-wide" @click="handleCreatePressed">Create Quest</button>
+  </div>
+
+  <div class="quest-filters">
     <div>
       <label>Search: </label>
       <input type="text" v-model="searchText" />
     </div>
+
     <div class="flex-row">
       <button @click="handleFilterSelected('all')" :disabled="filterValue === 'all'">All</button>
+
       <button @click="handleFilterSelected('active')" :disabled="filterValue === 'active'">
         Active
       </button>
+
       <button @click="handleFilterSelected('completed')" :disabled="filterValue === 'completed'">
         Completed
       </button>
     </div>
   </div>
+
   <QuestList :quests="filteredQuests" @quest-selected="handleQuestSelected" />
+
   <QuestDetail
     v-if="selectedQuest !== null"
     :quest="selectedQuest"
     @quest-completed="handleQuestCompleted"
     @edit-pressed="handleQuestEditPressed"
   />
+
   <QuestForm
-    name="editQuest"
-    v-if="isEditingQuest"
+    ref="editQuest"
+    v-if="appState === 'edit'"
     @quest-updated="handleQuestUpdated"
-    @edit-canceled="handleEditCanceled"
+    @modal-canceled="handleModalCanceled"
     :existingQuest="selectedQuest"
   />
-  <QuestForm name="createQuest" @quest-created="handleQuestCreated" />
+
+  <QuestForm
+    ref="createQuest"
+    v-if="appState === 'create'"
+    @quest-created="handleQuestCreated"
+    @modal-canceled="handleModalCanceled"
+  />
 </template>
 
-<style scoped></style>
+<style scoped>
+.button-wide {
+  width: 100%;
+}
+.quest-filters {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+</style>
